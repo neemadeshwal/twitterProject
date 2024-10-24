@@ -1,12 +1,14 @@
 import { initServer } from "./app";
+import { PORT } from "./utils/constants";
+
 
 
 
 async function init() {
 const app=await initServer()
 
-app.listen(8000,()=>{
-    console.log("server is lietning")
+app.listen(PORT,()=>{
+    console.log("server is listening on port",PORT,"......")
 })
     
 }
