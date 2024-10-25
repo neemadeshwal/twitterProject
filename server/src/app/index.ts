@@ -7,6 +7,7 @@ import { ApolloServer } from "@apollo/server"
 
 import Redis from "ioredis"
 import { User } from "./user"
+import { GraphqlContext } from "../interfaces"
 
 export async function initServer() {
     const app=express()
@@ -17,7 +18,7 @@ export async function initServer() {
     
     
 
-const graphqlServer=new ApolloServer<any>({
+const graphqlServer=new ApolloServer<GraphqlContext>({
     typeDefs:`
     ${User.types}
   

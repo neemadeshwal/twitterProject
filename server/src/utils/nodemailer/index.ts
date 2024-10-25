@@ -19,6 +19,7 @@ export function genOtp(){
 
 
 
+
 export async function sendOtp(email:string) {
      const otp=genOtp()
     const mailOptions={
