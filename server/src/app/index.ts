@@ -1,7 +1,7 @@
 import express from "express"
 import {expressMiddleware} from "@apollo/server/express4"
 import bodyParser from "body-parser"
-
+import AuthRoute from "./user/auth"
 import cors from "cors"
 import { ApolloServer } from "@apollo/server"
 
@@ -38,6 +38,8 @@ const graphqlServer=new ApolloServer<GraphqlContext>({
 await graphqlServer.start()
 
 app.use("/graphql",expressMiddleware(graphqlServer))
+
+app.use("/api/auth",AuthRoute)
 
 
 
