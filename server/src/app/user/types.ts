@@ -17,6 +17,12 @@ type createAccount{
 type verifyOtp{
     email:String
 }
+type getLoginCreds{
+    email:String
+}
+type checkLoginPassword{
+    token:String
+}
 input getCredAndSendOtpInput{
     email:String
     firstName:String
@@ -35,5 +41,12 @@ input resendOtpInput{
 input createAccountInput{
     email:String
     password:String
+}
+input checkLoginPasswordInput{
+    email:String
+    password:String
+}
+input getLoginCredsInput{
+    email:String
 }
 `

@@ -1,6 +1,6 @@
 import { prismaClient } from "../../client/db";
 import JWTService from "../../services/jwt";
-import { hashPassword } from "../../utils/hashPassword";
+import { checkHashedPassword, hashPassword } from "../../utils/hashPassword";
 import { sendOtp } from "../../utils/nodemailer";
 import { redis } from "../../utils/redis/redis";
 
@@ -32,10 +32,16 @@ const mutations={
         if(!firstName||!email){
             throw new Error("Please provide required credentials")
         }
-        // const user=await prismaClient.user.findUnique({where:{email}})
-        // if(user){
-        //     throw new Error("User already exist.Please login")
-        // }
+        try{
+            const user=await prismaClient.user.findUnique({where:{email:email}})
+            if(user){
+                throw new Error("User already exist.Please login")
+            }
+        }
+        catch(error){
+            console.log(error)
+        }
+       
         const data={
             email,firstName,lastName,dateOfBirth
         }
@@ -68,10 +74,10 @@ const mutations={
         if(!email||!otp){
             throw new Error("Please provide required creds")
         }
-        // const user=await prismaClient.user.findUnique({where:{email}})
-        // if(user){
-        //     throw new Error("User already exist.Please login")
-        // }
+        const user=await prismaClient.user.findUnique({where:{email:email}})
+        if(user){
+            throw new Error("User already exist.Please login")
+        }
         const storedOtp=await redis.get(`Otp/:${email}`)
 
         if(!storedOtp){
@@ -108,26 +114,26 @@ const mutations={
 
         const parsedVerifiedUser=JSON.parse(getVerifiedUser)
 
-        // const user=await prismaClient.user.findUnique({where:{email}})
-        // if(user){
-        //     throw new Error("User already exist.Please login")
-        // }
+        const user=await prismaClient.user.findUnique({where:{email}})
+        if(user){
+            throw new Error("User already exist.Please login")
+        }
         let userName
 
-        //  const existingUserName=await prismaClient.user.findUnique({where:{userName:`@ ${parsedVerifiedUser.lastName??"_"}${parsedVerifiedUser.firstName}`}})
-        // if(existingUserName){
-        //     if(parsedVerifiedUser.dateOfBirth){
-        //         userName=`@${existingUserName}${parsedVerifiedUser.dateOfBirth}`
+         const existingUserName=await prismaClient.user.findUnique({where:{userName:`@${parsedVerifiedUser.lastName??"_"}${parsedVerifiedUser.firstName}`}})
+        if(existingUserName){
+            if(parsedVerifiedUser.dateOfBirth){
+                userName=`@${existingUserName}${parsedVerifiedUser.dateOfBirth}`
 
-        //     }
-        //     else{
-        //    userName=`@${existingUserName}${Math.floor(Math.random()*20)}`
+            }
+            else{
+           userName=`@${existingUserName}${Math.floor(Math.random()*20)}`
 
-        //     }
-        // }
-        // else{
+            }
+        }
+        else{
              userName=`@${parsedVerifiedUser.lastName??"_"}${parsedVerifiedUser.firstName}`
-        // }
+        }
         const hashedPassword=await hashPassword(password)
        
         const newUser=await prismaClient.user.create({
@@ -141,9 +147,11 @@ const mutations={
 
             }
         })
+        
 
         const token=await JWTService.generateTokenFromUser(newUser)
-        return token
+        console.log(token,"token")
+        return {token}
 
 
     },
@@ -156,9 +164,60 @@ const mutations={
         const sentotp=await sendOtp(email)
         console.log(sentotp)
         return {email}
+    },
+    getLoginCreds:async(parent:any,{payload}:{payload:{email:string}},ctx:any)=>{
+         const {email}=payload
+         if(!email){
+            throw new Error("provide required credentials.")
+         }
+         const user=await prismaClient.user.findUnique({where:{email}})
+
+
+         if(!user){
+         const queryByUserName=await prismaClient.user.findUnique({where:{userName:email}})
+         if(!queryByUserName){
+            throw new Error("account doesnot exist")
+
+         }
+        
+         return {email:queryByUserName.email}
+         }
+         return {email}
+         
+    },
+    checkLoginPassword:async(parent:any,{payload}:{payload:{email:string,password:string}},ctx:any)=>{
+        const {email,password}=payload
+        if(!email||!password){
+            throw new Error("Please provide required credentials")
+        }
+        const user=await prismaClient.user.findUnique({where:{email}})
+        
+        if(!user){
+            throw new Error("account doesnot exist")
+       
+         }
+
+         if(!user.password){
+            throw new Error("password is not set please set password first.")
+         }
+
+         const verifyPassword=await checkHashedPassword(password,user.password)
+
+         if(!verifyPassword){
+            throw new Error("Password is invalid.PLease try again.")
+         }
+
+         const token=await JWTService.generateTokenFromUser
+
+         return {token}
+
+         
+        }
+
+        
     }
 
     
-}
+
 
 export const resolvers={mutations}

@@ -5,7 +5,6 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import { ApolloServer } from "@apollo/server"
 
-import Redis from "ioredis"
 import { User } from "./user"
 import { GraphqlContext } from "../interfaces"
 

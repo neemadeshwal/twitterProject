@@ -10,3 +10,16 @@ export async function hashPassword(password:string) {
 
     return hashedPassword
 }
+
+export async function checkHashedPassword(password:string,hashPassword:string) {
+
+    const isValid=await bcryptjs.compare(password,hashPassword)
+
+    if(!isValid){
+        return false
+    }
+    else{
+        return true
+    }
+    
+}
