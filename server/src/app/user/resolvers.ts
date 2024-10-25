@@ -14,10 +14,10 @@ interface getCredAndSendOtpPayload{
 const mutations={
 
      getCredAndSendOtp:async(parent:any,{payload}:{payload:getCredAndSendOtpPayload},ctx:any)=>{
+       console.log(payload,"payload")
+        const {firstName,lastName,dateOfBirth,email}=payload
 
-        const {firstName,lastName,dateOfBirth,email,otp}=payload
-
-        if(firstName||email){
+        if(!firstName||!email){
             throw new Error("Please provide required credentials")
         }
         const data={
@@ -25,9 +25,9 @@ const mutations={
         }
         const expiryTime=60*60*24
 
-       await  redis.set(`unverifiedUser/:${email}`,JSON.stringify(data),"EX",expiryTime)
+    //    await  redis.set(`unverifiedUser/:${email}`,JSON.stringify(data),"EX",expiryTime)
 
-       const otpsend=await sendOtp(email,otp)
+       const otpsend=await sendOtp(email)
 
        console.log(otpsend)
 
