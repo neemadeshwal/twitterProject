@@ -5,6 +5,7 @@ import SignupGoogle from "./signupGoogle";
 import SignupFacebook from "./signupFacebook";
 import CreateAccount from "./createAccount";
 import DivisionBar from "@/shared/divisionbar";
+import Link from "next/link";
 
 const SignupComp = () => {
   return (
@@ -26,8 +27,8 @@ const SignupComp = () => {
               </h3>
               <div className="">
                 <div className="flex flex-col gap-2 py-4 pb-1">
-                  <SignupGoogle />
-                  <SignupFacebook />
+                  <SignupGoogle signupType="signup" />
+                  <SignupFacebook signupType="signup" />
                 </div>
                 <div className="flex gap-1 pb-1  w-full h-full items-center">
                   <DivisionBar type="x" />
@@ -35,7 +36,7 @@ const SignupComp = () => {
                   <DivisionBar type="x" />
                 </div>
                 <div>
-                  <CreateAccount />
+                  <CreateAccount authType="signup" />
                 </div>
               </div>
               <div className="py-2">
@@ -49,10 +50,13 @@ const SignupComp = () => {
                   <h3 className="text-[#e7e9ea] font-[700] text-[17px] leading-[20px]">
                     Already have an account?
                   </h3>
-                  <div>
-                    <button className="border hover:text-blue-500 hover:bg-gray-950 border-px border-[#4949498e] rounded-full w-full py-2 text-center text-[#1d9bf0]">
-                      Sign in
-                    </button>
+
+                  <div className="">
+                    <Link href="/login">
+                      <button className="border hover:text-blue-500 hover:bg-gray-950 border-px border-[#4949498e] rounded-full w-full py-2 text-center text-[#1d9bf0]">
+                        Sign in
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
