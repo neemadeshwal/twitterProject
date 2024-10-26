@@ -32,14 +32,14 @@ const CreateAccount = ({ authType }: { authType: "login" | "signup" }) => {
                 </div>
               </div>
               <div className="flex  flex-col w-full h-full">
-                <div className="p-4 px-20 h-[70%] ">
+                <div className="p-4 px-20 h-[70%] overflow-auto ">
                   <div>
                     <div>
                       <h4 className="font-[700] text-[31px] leading-[36px]">
                         Create your account
                       </h4>
                     </div>
-                    <div>
+                    <div className="py-[20px]">
                       <Step1Creds />
                     </div>
                   </div>
