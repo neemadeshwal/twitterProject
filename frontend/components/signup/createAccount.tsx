@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { BsTwitterX, BsX } from "react-icons/bs";
+import Step1Creds from "./steps/step1-creds";
 
 const CreateAccount = ({ authType }: { authType: "login" | "signup" }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -30,22 +31,25 @@ const CreateAccount = ({ authType }: { authType: "login" | "signup" }) => {
                   <BsTwitterX className="text-[30px]" />
                 </div>
               </div>
-              <div className="flex  flex-col w-full">
-                <div className="p-4 px-20 ">
+              <div className="flex  flex-col w-full h-full">
+                <div className="p-4 px-20 h-[70%] ">
                   <div>
                     <div>
                       <h4 className="font-[700] text-[31px] leading-[36px]">
                         Create your account
                       </h4>
                     </div>
+                    <div>
+                      <Step1Creds />
+                    </div>
                   </div>
                 </div>
                 <div
                   style={{ boxShadow: "0 -0.4px 0px rgba(255,255,255,0.5)" }}
-                  className="p-4 px-20"
+                  className="p-4 px-20 items-center flex justify-center pt-6"
                 >
-                  <button className="bg-white  text-black items-center w-full py-2 rounded-full">
-                    next
+                  <button className="bg-white  text-black items-center w-full py-[0.8rem] font-[700] rounded-full">
+                    Next
                   </button>
                 </div>
               </div>
